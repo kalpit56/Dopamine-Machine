@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -23,59 +21,41 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        padding: EdgeInsets.symmetric(vertical: 50.0, horizontal: 30.0),
-        alignment: Alignment.center,
-        color: Colors.white,
-        child: Column(
-          children: [
-            Text(
-              "Bored Button",
-              textAlign: TextAlign.center,
-              style: GoogleFonts.pressStart2p(
-                color: Colors.black,
-                fontSize: 50.0,
-              ),
-            ),
-            SizedBox(height: 20.0),
-            Text(
-              "[Press the button to start]",
-              style: GoogleFonts.pressStart2p(
-                color: Colors.black,
-                fontSize: 10.0,
-              ),
-            ),
-            SizedBox(height: 100.0),
-            Text(
-              '$counter',
-              style: GoogleFonts.pressStart2p(
-                color: Colors.black,
-                fontSize: 50.0,
-              ),
-            ),
-            Spacer(),
-            GestureDetector(
-              child: img,
-
-              onTapDown: (tap) {
-                setState(() {
-                  // when it is pressed
-                  img = imgDown;
-                  counter++;
-                });
-              },
-              onTapUp: (tap) {
-                setState(() {
-                  // when it is released
-                  img = imgUp;
-                });
-              },
-            )
-          ],
-        ),
+      appBar: AppBar(
+        title: const Text("HOME"),
+        centerTitle: true,
       ),
+      body: _buildList(),
+    );
+  }
+
+  List<String> _todoList = ["Work Out", "Brush Teeth", "Take out the Trash"];
+  Set<String> _done = Set<String>();
+
+  Widget _buildList() {
+    return ListView.separated(
+        itemCount: _todoList.length,
+        separatorBuilder: (BuildContext context, int index) => Divider(),
+        padding: const EdgeInsets.all(8),
+        itemBuilder: (context, item) {
+          return _buildRow(_todoList[item]);
+        });
+  }
+
+  Widget _buildRow(String todo) {
+    final alreadyDone = _done.contains(todo);
+    return ListTile(
+      leading: Icon(alreadyDone ? Icons.check_box : Icons.check_box_outline_blank),
+      title: Text(todo, style: TextStyle(fontSize: 20.0)),
+      onTap: () {
+        setState(() {
+          if(alreadyDone){
+            _done.remove(todo);
+          } else {
+            _done.add(todo);
+          }
+        });
+      }
     );
   }
 }
-
-
