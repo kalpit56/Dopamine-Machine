@@ -21,10 +21,15 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("HOME"),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: Text("TO-DO"), actions: <Widget>[
+        IconButton(
+          icon: Icon(
+            Icons.add,
+            color: Colors.black,
+          ),
+          onPressed: (onPress),
+        )
+      ]),
       body: _buildList(),
     );
   }
@@ -45,17 +50,45 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildRow(String todo) {
     final alreadyDone = _done.contains(todo);
     return ListTile(
-      leading: Icon(alreadyDone ? Icons.check_box : Icons.check_box_outline_blank),
-      title: Text(todo, style: TextStyle(fontSize: 20.0)),
-      onTap: () {
-        setState(() {
-          if(alreadyDone){
-            _done.remove(todo);
-          } else {
-            _done.add(todo);
-          }
+        leading:
+            Icon(alreadyDone ? Icons.check_box : Icons.check_box_outline_blank),
+        title: Text(todo, style: TextStyle(fontSize: 20.0)),
+        onTap: () {
+          setState(() {
+            if (alreadyDone) {
+              _done.remove(todo);
+            } else {
+              _done.add(todo);
+            }
+          });
         });
-      }
+  }
+
+  void _addTodoItem(String task) {
+    // Only add the task if the user actually entered something
+    if (task.length > 0) {
+      // Putting our code inside "setState" tells the app that our state has changed, and
+      // it will automatically re-render the list
+      setState(() => _todoList.add(task));
+    }
+  }
+
+  void onPress() {
+    Navigator.of(context).push(
+      new MaterialPageRoute(builder: (context) {
+        return new Scaffold(
+          appBar: new AppBar(title: new Text('New Task')),
+          body: new TextField(
+              autofocus: true,
+              onSubmitted: (task) {
+                _addTodoItem(task);
+                Navigator.pop(context);
+              },
+              decoration: new InputDecoration(
+                  hintText: 'Enter a new Task',
+                  contentPadding: const EdgeInsets.all(16.0))),
+        );
+      }),
     );
   }
 }
