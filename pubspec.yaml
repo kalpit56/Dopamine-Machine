@@ -14,6 +14,8 @@ dependencies:
     sdk: flutter
   google_fonts:
   grouped_list: ^3.5.0
+  random_color: ^1.0.5
+  mantras: ^0.0.3
 
 
   cupertino_icons: ^0.1.3
