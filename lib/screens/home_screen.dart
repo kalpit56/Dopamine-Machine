@@ -35,32 +35,34 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   List<String> _todoList = ["Work Out", "Brush Teeth", "Take out the Trash"];
-  Set<String> _done = Set<String>();
+  // Set<String> _done = Set<String>();
 
   Widget _buildList() {
-    return ListView.separated(
+    return ListView.builder(
         itemCount: _todoList.length,
-        separatorBuilder: (BuildContext context, int index) => Divider(),
-        padding: const EdgeInsets.all(8),
-        itemBuilder: (context, item) {
-          return _buildRow(_todoList[item]);
-        });
-  }
+        itemBuilder: (context, index) {
+          final item = _todoList[index];
 
-  Widget _buildRow(String todo) {
-    final alreadyDone = _done.contains(todo);
-    return ListTile(
-        leading:
-            Icon(alreadyDone ? Icons.check_box : Icons.check_box_outline_blank),
-        title: Text(todo, style: TextStyle(fontSize: 20.0)),
-        onTap: () {
-          setState(() {
-            if (alreadyDone) {
-              _done.remove(todo);
-            } else {
-              _done.add(todo);
-            }
-          });
+          return Dismissible(
+            // Each Dismissible must contain a Key. Keys allow Flutter to
+            // uniquely identify widgets.
+            key: Key(item),
+            // Provide a function that tells the app
+            // what to do after an item has been swiped away.
+            onDismissed: (direction) {
+              // Remove the item from the data source.
+              setState(() {
+                _todoList.removeAt(index);
+              });
+
+              // Then show a snackbar.
+              Scaffold.of(context)
+                  .showSnackBar(SnackBar(content: Text("$item dismissed")));
+            },
+            // Show a red background as the item is swiped away.
+            background: Container(color: Colors.red),
+            child: ListTile(title: Text('$item')),
+          );
         });
   }
 
